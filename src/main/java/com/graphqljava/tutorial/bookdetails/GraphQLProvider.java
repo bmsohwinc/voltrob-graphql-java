@@ -56,6 +56,11 @@ public class GraphQLProvider {
                     .dataFetcher("author", graphQLDataFetchers.getAuthorDataFetcher()))
                 .type(newTypeWiring("Author")
                     .dataFetcher("books", graphQLDataFetchers.getBooksByAuthor()))
+                .type(newTypeWiring("Mutation")
+                    .dataFetcher("addNewBook", graphQLDataFetchers.addNewBook())
+                    ) //.dataFetcher("addNewAuthor", graphQLDataFetchers.addNewAuthor())
                 .build();
     }
 }
+
+// addNewAuthor(lastName: String!, firstName: String!) : Author!

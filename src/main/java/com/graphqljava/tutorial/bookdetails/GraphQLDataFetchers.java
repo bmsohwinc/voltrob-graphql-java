@@ -5,15 +5,12 @@ import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class GraphQLDataFetchers {
-    private static List<Map<String, String>> books = Arrays.asList(
+    private static List<Map<String, String>> books = new LinkedList<>(Arrays.asList(
             ImmutableMap.of(
                     "id", "book-1",
                     "name", "Let Us C",
@@ -34,9 +31,9 @@ public class GraphQLDataFetchers {
                     "name", "Let Us C++",
                     "pageCount", "700",
                     "authorId", "author-1")
-    );
+    ));
 
-    private static List<Map<String, String>> authors = Arrays.asList(
+    private static List<Map<String, String>> authors = new LinkedList<>(Arrays.asList(
             ImmutableMap.of("id", "author-1",
                     "firstName", "Yash",
                     "lastName", "Kanetkar"),
@@ -46,7 +43,7 @@ public class GraphQLDataFetchers {
             ImmutableMap.of("id", "author-3",
                     "firstName", "Arthur",
                     "lastName", "Doyle")
-    );
+    ));
 
     public DataFetcher getBookByIdDataFetcher() {
         return dataFetchingEnvironment-> {
@@ -90,4 +87,32 @@ public class GraphQLDataFetchers {
         };
     }
 
+    public DataFetcher addNewBook() {
+        return dataFetchingEnvironment -> {
+            String authorId = dataFetchingEnvironment.getArgument("authorId");
+            String bookName = dataFetchingEnvironment.getArgument("bookName");
+            String numberOfPages = dataFetchingEnvironment.getArgument("pageCount").toString();
+            if (authors.stream().filter(author -> author.get("id").equals(authorId)).count() != 0) {
+                Map<String, String> newBook = new HashMap<>();
+                String newBookId = "book-" + Integer.toString(books.size() + 1);
+                books.add(
+                        ImmutableMap.of(
+                                "id" , newBookId,
+                                "name", bookName,
+                                "pageCount", numberOfPages,
+                                "authorId", authorId
+                        )
+                );
+                return books.get(books.size() - 1);
+            }
+            else {
+                System.out.println("Couldn't find the author id: " + authorId);
+                return (Map<String, String>) new HashMap<String, String>();
+            }
+        };
+    }
+
+    // TODO
+//    public DataFetcher addNewAuthor() {
+//    }
 }

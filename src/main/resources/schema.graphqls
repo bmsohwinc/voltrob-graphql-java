@@ -24,5 +24,4 @@ type Author {
 
 type Mutation {
     addNewBook(authorId: String!, bookName: String!, pageCount: Int!) : Book
-    addNewAuthor(lastName: String!, firstName: String!) : Author!
 }
