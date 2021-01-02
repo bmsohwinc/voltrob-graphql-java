@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 
+import javax.xml.crypto.Data;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class GraphQLDataFetchers {
@@ -25,7 +28,12 @@ public class GraphQLDataFetchers {
                     "id", "book-3",
                     "name", "Study in Scarlet",
                     "pageCount", "600",
-                    "authorId", "author-3")
+                    "authorId", "author-3"),
+            ImmutableMap.of(
+                    "id", "book-4",
+                    "name", "Let Us C++",
+                    "pageCount", "700",
+                    "authorId", "author-1")
     );
 
     private static List<Map<String, String>> authors = Arrays.asList(
@@ -65,8 +73,21 @@ public class GraphQLDataFetchers {
 
     // New resolver to fetch all books
     public DataFetcher getAllBooks() {
+        return dataFetchingEnvironment -> books;
+    }
+
+    // New resolver to fetch books by the Author
+    public DataFetcher getBooksByAuthor() {
         return dataFetchingEnvironment -> {
-            return books;
+            Map<String, String> theAuthor = dataFetchingEnvironment.getSource();
+            String authorId = theAuthor.get("id");
+            System.out.println(books.stream()
+                    .filter(book -> book.get("authorId").equals(authorId))
+                    .collect(Collectors.toList()));
+            return books.stream()
+                    .filter(book -> book.get("authorId").equals(authorId))
+                    .collect(Collectors.toList());
         };
     }
+
 }
