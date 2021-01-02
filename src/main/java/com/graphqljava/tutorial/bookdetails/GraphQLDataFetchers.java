@@ -62,4 +62,11 @@ public class GraphQLDataFetchers {
                     .orElse(null);
         };
     }
+
+    // New resolver to fetch all books
+    public DataFetcher getAllBooks() {
+        return dataFetchingEnvironment -> {
+            return books;
+        };
+    }
 }

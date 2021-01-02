@@ -44,10 +44,14 @@ public class GraphQLProvider {
         return schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring);
     }
 
+    // Adding multiple resolvers:
+    //  Refer Default DataFetchers subsection of:
+    //      https://www.graphql-java.com/tutorials/getting-started-with-spring-boot/
     private RuntimeWiring buildWiring() {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
-                    .dataFetcher("bookById", graphQLDataFetchers.getBookByIdDataFetcher()))
+                    .dataFetcher("bookById", graphQLDataFetchers.getBookByIdDataFetcher())
+                    .dataFetcher("allBooks", graphQLDataFetchers.getAllBooks())) // added multiple fetchers
                 .type(newTypeWiring("Book")
                     .dataFetcher("author", graphQLDataFetchers.getAuthorDataFetcher()))
                 .build();
