@@ -6,7 +6,7 @@ schema {
 type Query {
     bookById(id : ID) : Book
     allBooks : [Book!]!
-    # TODO : booksByAuthorId
+    booksByAuthorId(authorId: String!) : [Book]!
 }
 
 type Book {

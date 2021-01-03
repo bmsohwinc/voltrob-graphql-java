@@ -129,4 +129,14 @@ public class GraphQLDataFetchers {
             return authors.get(authors.size() - 1);
         };
     }
+
+    public DataFetcher getBooksByAuthorIdDataFetcher() {
+        return dataFetchingEnvironment -> {
+            String authorId = dataFetchingEnvironment.getArgument("authorId");
+            System.out.println("Got author id: " + authorId);
+            return books.stream()
+                    .filter(book -> book.get("authorId").equals(authorId))
+                    .collect(Collectors.toList());
+        };
+    }
 }
