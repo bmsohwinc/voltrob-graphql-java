@@ -103,6 +103,7 @@ public class GraphQLDataFetchers {
                                 "authorId", authorId
                         )
                 );
+                System.out.println("New Book successfully added!");
                 return books.get(books.size() - 1);
             }
             else {
@@ -112,7 +113,20 @@ public class GraphQLDataFetchers {
         };
     }
 
-    // TODO
-//    public DataFetcher addNewAuthor() {
-//    }
+    public DataFetcher addNewAuthor() {
+        return dataFetchingEnvironment -> {
+            String newAuthorFirstName = dataFetchingEnvironment.getArgument("firstName");
+            String newAuthorLastName = dataFetchingEnvironment.getArgument("lastName");
+            String newAuthorId = "author-" + Integer.toString(authors.size() + 1);
+            authors.add(
+                    ImmutableMap.of(
+                            "id", newAuthorId,
+                            "firstName", newAuthorFirstName,
+                            "lastName", newAuthorLastName
+                    )
+            );
+            System.out.println("New Author successfully added!");
+            return authors.get(authors.size() - 1);
+        };
+    }
 }
